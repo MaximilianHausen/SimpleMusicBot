@@ -308,7 +308,7 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.Title = "Track info";
         embedBuilder.Color = responseColor;
         embedBuilder.AddField("Details",
-            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Hinzugefügt von`: {currentPlayingRequestor}`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
+            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Hinzugefügt von`: {currentPlayingRequestor}\n`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
 
         return ctx.CreateResponseAsync(embedBuilder.Build(), true);
     }
