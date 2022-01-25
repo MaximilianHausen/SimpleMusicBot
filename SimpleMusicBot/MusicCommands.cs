@@ -16,7 +16,7 @@ public class MusicCommands : ApplicationCommandModule
 
     private static readonly Timer afkCheckTimer = new(60000) { AutoReset = true };
 
-    private static string currentPlayingRequestor = null;
+    private static string currentPlayingRequestor = "Wenn du das hier siehst, melde dich bei Maxi#2608";
     public static readonly Dictionary<ulong, Queue<(LavalinkTrack, string)>> queue = new();
     public static readonly Dictionary<ulong, bool> loop = new();
     public static readonly Dictionary<ulong, int> afkTimers = new();
@@ -78,7 +78,7 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.AddField("`/leave`", "Verlässt den Sprachkanal, in dem der Bot gerade ist und leert die Warteliste");
         embedBuilder.AddField("`/play`",
             "Spielt ein Lied im momentanen Channel ab (vorher mit /join den Bot herholen). Als Quelle geht ein Suchbegriff für Youtube oder ein direkter Link zu YouTube, SoundCloud, Bandcamp, Vimeo, Twitch streams oder einer Videodatei. Standartmäßig wird das Lied hinten in die Warteschlange eingereiht. Mit playNow true (TAB drücken nach Commandeingabe) wird es vorne eingereiht und sofort abgespielt (überspringt das momentane Lied)");
-        embedBuilder.AddField("`/trackinfo`", "Zeigt Informationen über das momentane Lied an (Titel, Autor, Quelle, Abspielposition)");
+        embedBuilder.AddField("`/nowplaying`", "Zeigt Informationen über das momentane Lied an (Titel, Autor, Quelle, Abspielposition)");
         embedBuilder.AddField("`/queue`", "Zeigt die momentane Warteschlange an (ohne dem jetztigen Lied)");
         embedBuilder.AddField("`/skip`", "Überspringt das aktuelle Lied (kein Voting)");
         embedBuilder.AddField("`/skipto`", "Springt zu einer bestimmten Stelle im Video, angegeben in Minuten und Sekunden");
@@ -280,8 +280,8 @@ public class MusicCommands : ApplicationCommandModule
 
     [UpdateCaches]
     [CustomRequireGuild]
-    [SlashCommand("trackinfo", "Zeigt informationen über den aktuellen Track")]
-    public Task TrackInfo(InteractionContext ctx)
+    [SlashCommand("nowplaying", "Zeigt informationen über den aktuellen Track")]
+    public Task NowPlaying(InteractionContext ctx)
     {
         var embedBuilder = new DiscordEmbedBuilder();
 
@@ -305,10 +305,10 @@ public class MusicCommands : ApplicationCommandModule
 
         var track = conn.CurrentState.CurrentTrack;
 
-        embedBuilder.Title = "Track info";
+        embedBuilder.Title = "Now playing";
         embedBuilder.Color = responseColor;
         embedBuilder.AddField("Details",
-            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Hinzugefügt von`: {currentPlayingRequestor}\n`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
+            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Angefordert von`: {currentPlayingRequestor}\n`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
 
         return ctx.CreateResponseAsync(embedBuilder.Build(), true);
     }

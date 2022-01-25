@@ -14,6 +14,8 @@ public class Program
     {
         var token = Environment.GetEnvironmentVariable("MUSIC_BOT_TOKEN") ??
                     throw new InvalidOperationException("Environment variable \"MUSIC_BOT_TOKEN\" not found");
+        var lavalinkPassword = Environment.GetEnvironmentVariable("LAVALINK_PASSWORD") ??
+                               throw new InvalidOperationException("Environment variable \"MUSIC_BOT_TOKEN\" not found");
 
         Client = new DiscordClient(new DiscordConfiguration
         {
@@ -32,7 +34,7 @@ public class Program
 
         var lavalinkConfig = new LavalinkConfiguration
         {
-            Password = "password(yes, really)",
+            Password = lavalinkPassword,
             RestEndpoint = endpoint,
             SocketEndpoint = endpoint
         };
