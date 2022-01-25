@@ -20,7 +20,7 @@ public class UpdateCaches : SlashCheckBaseAttribute
         if ((conn?.IsConnected).GetValueOrDefault())
         {
             if (!MusicCommands.queue.ContainsKey(guildId))
-                MusicCommands.queue.Add(guildId, new Queue<LavalinkTrack>());
+                MusicCommands.queue.Add(guildId, new Queue<(LavalinkTrack, string)>());
             if (!MusicCommands.loop.ContainsKey(guildId))
                 MusicCommands.loop.Add(guildId, false);
             if (!MusicCommands.afkTimers.ContainsKey(guildId))
