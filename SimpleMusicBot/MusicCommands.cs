@@ -215,6 +215,8 @@ public class MusicCommands : ApplicationCommandModule
             return;
         }
 
+        await ctx.DeferAsync();
+
         var loadResult = isLink
             ? await node.Rest.GetTracksAsync(new Uri(source))
             : await node.Rest.GetTracksAsync(source);
