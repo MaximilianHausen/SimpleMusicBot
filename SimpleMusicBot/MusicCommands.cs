@@ -215,8 +215,6 @@ public class MusicCommands : ApplicationCommandModule
             return;
         }
 
-        await ctx.DeferAsync(source.Contains("dQw4w9WgXcQ"));
-
         var loadResult = isLink
             ? await node.Rest.GetTracksAsync(new Uri(source))
             : await node.Rest.GetTracksAsync(source);
@@ -243,9 +241,7 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.Title = "Track found";
         embedBuilder.Color = responseColor;
         
-        string requesterName = source.Contains("dQw4w9WgXcQ")
-            ? ctx.Guild.GetMemberAsync(567387950308917268).GetAwaiter().GetResult()?.Nickname ?? "LELEC_EXTREME"
-            : ctx.Member.Nickname ?? ctx.Member.Username;
+        string requesterName = ctx.Member.Nickname ?? ctx.Member.Username;
 
         if (playNow)
         {
