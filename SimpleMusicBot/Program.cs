@@ -15,7 +15,7 @@ public class Program
         var token = Environment.GetEnvironmentVariable("MUSIC_BOT_TOKEN") ??
                     throw new InvalidOperationException("Environment variable \"MUSIC_BOT_TOKEN\" not found");
         var lavalinkPassword = Environment.GetEnvironmentVariable("LAVALINK_PASSWORD") ??
-                               throw new InvalidOperationException("Environment variable \"MUSIC_BOT_TOKEN\" not found");
+                               throw new InvalidOperationException("Environment variable \"LAVALINK_PASSWORD\" not found");
 
         Client = new DiscordClient(new DiscordConfiguration
         {
