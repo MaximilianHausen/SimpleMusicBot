@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01152" />
-        <PackageReference Include="DSharpPlus.Lavalink" Version="4.3.0-nightly-01152" />
-        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0-nightly-01152" />
+        <PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01175" />
+        <PackageReference Include="DSharpPlus.Lavalink" Version="4.3.0-nightly-01175" />
+        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0-nightly-01175" />
         <PackageReference Include="morelinq" Version="3.3.2" />
     </ItemGroup>
 

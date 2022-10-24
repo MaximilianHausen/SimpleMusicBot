@@ -254,11 +254,11 @@ public class MusicCommands : ApplicationCommandModule
         }
         else
         {
-            if (queue[ctx.Guild.Id].Count >= 10)
+            if (queue[ctx.Guild.Id].Count >= 50)
             {
                 embedBuilder.Title = "Fehler";
                 embedBuilder.Color = errorColor;
-                embedBuilder.AddField("Details", $"`{track.Title}` konnte nicht zur Warteschlange hinzugefügt werden, weil sie schon 10 Tracks enthält");
+                embedBuilder.AddField("Details", $"`{track.Title}` konnte nicht zur Warteschlange hinzugefügt werden, weil sie schon 50 Tracks enthält");
                 await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbeds(new[] { embedBuilder.Build() }));
                 return;
             }
