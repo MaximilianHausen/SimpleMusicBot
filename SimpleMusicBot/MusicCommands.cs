@@ -51,8 +51,6 @@ public class MusicCommands : ApplicationCommandModule
 
     private static Task PlaybackFinished(LavalinkGuildConnection sender, TrackFinishEventArgs e)
     {
-        e.Handled = true;
-
         if (e.Reason is TrackEndReason.Finished or TrackEndReason.LoadFailed)
         {
             if (loop[sender.Guild.Id])
