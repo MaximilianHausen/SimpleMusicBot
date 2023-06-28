@@ -16,7 +16,8 @@ public class MusicCommands : ApplicationCommandModule
 
     private static readonly Timer afkCheckTimer = new(60000) { AutoReset = true };
 
-    private static string currentPlayingRequestor = "Wenn du das hier siehst, melde dich bei Maxi#2608";
+    // Only used for getting the requestor of the current track (the string)
+    private static readonly Dictionary<ulong, (LavalinkTrack, string)> currentTracks = new();
     public static readonly Dictionary<ulong, Queue<(LavalinkTrack, string)>> queue = new();
     public static readonly Dictionary<ulong, bool> loop = new();
     public static readonly Dictionary<ulong, int> afkTimers = new();
@@ -63,9 +64,11 @@ public class MusicCommands : ApplicationCommandModule
             else if (queue[sender.Guild.Id].Any())
             {
                 var (lavalinkTrack, requestor) = queue[sender.Guild.Id].Dequeue();
-                currentPlayingRequestor = requestor;
+                currentTracks[sender.Guild.Id] = (lavalinkTrack, requestor);
                 e.Player.PlayAsync(lavalinkTrack);
             }
+            else
+                currentTracks.Remove(sender.Guild.Id);
         }
 
         return Task.CompletedTask;
@@ -169,6 +172,9 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.AddField("Details", $"{conn.Channel.Mention} verlassen");
         await ctx.CreateResponseAsync(embedBuilder.Build());
 
+        currentTracks.Remove(ctx.Guild.Id);
+        queue[ctx.Guild.Id].Clear();
+        loop[ctx.Guild.Id] = false;
         await conn.DisconnectAsync();
     }
 
@@ -274,7 +280,7 @@ public class MusicCommands : ApplicationCommandModule
         if (conn.CurrentState.CurrentTrack == null || playNow)
         {
             var (lavalinkTrack, requestor) = queue[ctx.Guild.Id].Dequeue();
-            currentPlayingRequestor = requestor;
+            currentTracks[ctx.Guild.Id] = (lavalinkTrack, requestor);
             await conn.PlayAsync(lavalinkTrack);
         }
     }
@@ -309,7 +315,7 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.Title = "Now playing";
         embedBuilder.Color = responseColor;
         embedBuilder.AddField("Details",
-            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Angefordert von`: {currentPlayingRequestor}\n`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
+            $"`Titel`: {track.Title}\n`Autor`: {track.Author}\n`Quelle`: {track.Uri}\n`Angefordert von`: {currentTracks[ctx.Guild.Id].Item2}\n`Position`: {conn.CurrentState.PlaybackPosition:hh\\:mm\\:ss}/{track.Length:hh\\:mm\\:ss}\n`Loop`: {(loop[ctx.Guild.Id] ? "aktiviert" : "deaktiviert")}");
 
         return ctx.CreateResponseAsync(embedBuilder.Build(), true);
     }
@@ -403,7 +409,7 @@ public class MusicCommands : ApplicationCommandModule
         if (queue[ctx.Guild.Id].Any())
         {
             var (lavalinkTrack, requestor) = queue[ctx.Guild.Id].Dequeue();
-            currentPlayingRequestor = requestor;
+            currentTracks[ctx.Guild.Id] = (lavalinkTrack, requestor);
             await conn.PlayAsync(lavalinkTrack);
         }
         else
@@ -602,6 +608,7 @@ public class MusicCommands : ApplicationCommandModule
         embedBuilder.AddField("Details", $"Wiedergabe in Kanal {conn.Channel.Mention} gestoppt und Warteliste geleert");
         await ctx.CreateResponseAsync(embedBuilder.Build());
 
+        currentTracks.Remove(ctx.Guild.Id);
         queue[ctx.Guild.Id].Clear();
         loop[ctx.Guild.Id] = false;
         await conn.StopAsync();
