@@ -106,11 +106,11 @@ public class MusicCommands : ApplicationCommandModule
 
         var channel = ctx.Member.VoiceState?.Channel;
 
-        if (channel == null)
+        if (channel == null || channel.GuildId != ctx.Channel.GuildId)
         {
             embedBuilder.Title = "Fehler";
             embedBuilder.Color = errorColor;
-            embedBuilder.AddField("Details", "Du bist nicht in einem Sprachkanal");
+            embedBuilder.AddField("Details", "Du bist nicht in einem Sprachkanal in diesem Server");
             await ctx.CreateResponseAsync(embedBuilder.Build(), true);
             return;
         }
@@ -192,11 +192,11 @@ public class MusicCommands : ApplicationCommandModule
         {
             var channel = ctx.Member.VoiceState?.Channel;
 
-            if (channel == null)
+            if (channel == null || channel.GuildId != ctx.Channel.GuildId)
             {
                 embedBuilder.Title = "Fehler";
                 embedBuilder.Color = errorColor;
-                embedBuilder.AddField("Details", "Du bist nicht in einem Sprachkanal");
+                embedBuilder.AddField("Details", "Du bist nicht in einem Sprachkanal in diesem Server");
                 await ctx.CreateResponseAsync(embedBuilder.Build(), true);
                 return;
             }
