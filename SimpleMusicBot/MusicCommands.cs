@@ -37,6 +37,11 @@ public class MusicCommands : ApplicationCommandModule
         foreach (var guildId in queue.Keys)
         {
             var conn = lava.GetGuildConnection(client.Guilds[guildId]);
+            if (conn.Channel.Users.Count == 1)
+            {
+                queue[guildId].Clear();
+                loop[guildId] = false;
+            }
 
             if (conn.CurrentState.CurrentTrack == null)
                 afkTimers[guildId]--;
