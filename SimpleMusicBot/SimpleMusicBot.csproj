@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Exe</OutputType>
@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DSharpPlus" Version="4.4.0" />
-        <PackageReference Include="DSharpPlus.Lavalink" Version="4.4.0" />
-        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.0" />
+        <PackageReference Include="DSharpPlus" Version="4.4.2" />
+        <PackageReference Include="DSharpPlus.Lavalink" Version="4.4.2" />
+        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.2" />
         <PackageReference Include="morelinq" Version="3.4.2" />
     </ItemGroup>
 
