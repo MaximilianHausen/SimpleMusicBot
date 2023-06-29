@@ -46,6 +46,8 @@ public class Program
 
         var lavalink = Client.UseLavalink();
 
+        Client.GuildDownloadCompleted += async (client, _) => client.Logger.Log(LogLevel.Information, new EventId(0, "Startup"), "Active Guilds: " + client.Guilds.Select(g => g.Value.Name).Aggregate((a, b) => $"{a}, {b}"), null, (s, e) => s);
+
         await Client.ConnectAsync();
         await lavalink.ConnectAsync(lavalinkConfig);
 
