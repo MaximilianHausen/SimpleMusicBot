@@ -3,6 +3,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using DSharpPlus.SlashCommands;
+using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Timer = System.Timers.Timer;
 
@@ -62,12 +63,16 @@ public class MusicCommands : ApplicationCommandModule
         if (e.Reason is TrackEndReason.Finished or TrackEndReason.LoadFailed)
         {
             if (loop[sender.Guild.Id])
+            {
                 e.Player.PlayAsync(e.Track);
+                Program.Client.Logger.Log(LogLevel.Information, new EventId(0, "Playback"), "Looping track in guild " + sender.Guild.Id + " (" + sender.Guild.Name + "): " + e.Track.Title);
+            }
             else if (queue[sender.Guild.Id].Any())
             {
                 var (lavalinkTrack, requestor) = queue[sender.Guild.Id].Dequeue();
                 currentTracks[sender.Guild.Id] = (lavalinkTrack, requestor);
                 e.Player.PlayAsync(lavalinkTrack);
+                Program.Client.Logger.Log(LogLevel.Information, new EventId(0, "Playback"), "Playing next track in guild " + sender.Guild.Id + " (" + sender.Guild.Name + "): " + lavalinkTrack.Title);
             }
             else
                 currentTracks.Remove(sender.Guild.Id);
