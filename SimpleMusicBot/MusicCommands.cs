@@ -22,6 +22,8 @@ public class MusicCommands : ApplicationCommandModule
     public static readonly Dictionary<ulong, bool> loop = new();
     public static readonly Dictionary<ulong, int> afkTimers = new();
 
+    public static readonly HashSet<ulong> usedAprilFools = new();
+
     public static void Initialize()
     {
         afkCheckTimer.Elapsed += CheckInactivity;
@@ -254,9 +256,46 @@ public class MusicCommands : ApplicationCommandModule
         
         string requesterName = ctx.Member.Nickname ?? ctx.Member.Username;
 
+        LavalinkTrack? aprilFoolsTrack = null;
+        switch (new Random().Next(0, usedAprilFools.Contains(ctx.Member.Id) ? 15 : 5))
+        {
+            case 0:
+                aprilFoolsTrack = (await node.Rest.GetTracksAsync("W4jg6iWyCHM")).Tracks.First();
+                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+                requesterName = "Ast Rickley";
+                usedAprilFools.Add(ctx.Member.Id);
+                break;
+            case 1:
+                aprilFoolsTrack = (await node.Rest.GetTracksAsync("rm8073qYY8k")).Tracks.First();
+                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+                requesterName = "Ast Rickley";
+                usedAprilFools.Add(ctx.Member.Id);
+                break;
+            case 2:
+                aprilFoolsTrack = (await node.Rest.GetTracksAsync("cw8tuNZjIf4")).Tracks.First();
+                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+                requesterName = "Ast Rickley";
+                usedAprilFools.Add(ctx.Member.Id);
+                break;
+            case 3:
+                aprilFoolsTrack = (await node.Rest.GetTracksAsync("POiIWiIPBVo")).Tracks.First();
+                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+                requesterName = "Ast Rickley";
+                usedAprilFools.Add(ctx.Member.Id);
+                break;
+            case 4:
+                aprilFoolsTrack = (await node.Rest.GetTracksAsync("lrbOiYrMSPk")).Tracks.First();
+                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+                requesterName = "Ast Rickley";
+                usedAprilFools.Add(ctx.Member.Id);
+                break;
+            default:
+                break;
+        }
+
         if (playNow)
         {
-            queue[ctx.Guild.Id] = new Queue<(LavalinkTrack, string)>(Enumerable.Prepend(queue[ctx.Guild.Id], (track, requesterName)));
+            queue[ctx.Guild.Id] = new Queue<(LavalinkTrack, string)>(Enumerable.Prepend(queue[ctx.Guild.Id], (aprilFoolsTrack ?? track, requesterName)));
             embedBuilder.AddField("Details", $"`{track.Title}` wird jetzt in {conn.Channel.Mention} abgespielt");
             await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbeds(new[] { embedBuilder.Build() }));
             loop[ctx.Guild.Id] = false;
