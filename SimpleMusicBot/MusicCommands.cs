@@ -262,7 +262,7 @@ public class MusicCommands : ApplicationCommandModule
         string requesterName = ctx.Member.Nickname ?? ctx.Member.Username;
 
         LavalinkTrack? aprilFoolsTrack = null;
-        switch (new Random().Next(0, usedAprilFools.Contains(ctx.Member.Id) ? 15 : 5))
+        switch (new Random().Next(0, usedAprilFools.Contains(ctx.Member.Id) ? 10 : 5))
         {
             case 0:
                 aprilFoolsTrack = (await node.Rest.GetTracksAsync("W4jg6iWyCHM")).Tracks.First();
@@ -316,7 +316,7 @@ public class MusicCommands : ApplicationCommandModule
                 return;
             }
 
-            queue[ctx.Guild.Id].Enqueue((track, requesterName));
+            queue[ctx.Guild.Id].Enqueue((aprilFoolsTrack ?? track, requesterName));
             embedBuilder.AddField("Details", $"`{track.Title}` zur Wartschlange für {conn.Channel.Mention} hinzugefügt");
             await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbeds(new[] { embedBuilder.Build() }));
         }
@@ -326,6 +326,7 @@ public class MusicCommands : ApplicationCommandModule
             var (lavalinkTrack, requestor) = queue[ctx.Guild.Id].Dequeue();
             currentTracks[ctx.Guild.Id] = (lavalinkTrack, requestor);
             await conn.PlayAsync(lavalinkTrack);
+            Program.Client.Logger.Log(LogLevel.Information, new EventId(0, "Playback"), "Directly playing track in guild " + ctx.Guild.Id + " (" + ctx.Guild.Name + "): " + lavalinkTrack.Title);
         }
     }
 
