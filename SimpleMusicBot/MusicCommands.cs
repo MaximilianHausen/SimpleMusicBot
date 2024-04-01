@@ -23,8 +23,6 @@ public class MusicCommands : ApplicationCommandModule
     public static readonly Dictionary<ulong, bool> loop = new();
     public static readonly Dictionary<ulong, int> afkTimers = new();
 
-    public static readonly HashSet<ulong> usedAprilFools = new();
-
     public static void Initialize()
     {
         afkCheckTimer.Elapsed += CheckInactivity;
@@ -258,44 +256,33 @@ public class MusicCommands : ApplicationCommandModule
         var track = loadResult.Tracks.First();
         embedBuilder.Title = "Track found";
         embedBuilder.Color = responseColor;
-        
+
         string requesterName = ctx.Member.Nickname ?? ctx.Member.Username;
 
         LavalinkTrack? aprilFoolsTrack = null;
-        switch (new Random().Next(0, usedAprilFools.Contains(ctx.Member.Id) ? 10 : 5))
+        var aprilFoolsRand = new Random().Next(0, 10);
+        if (Program.EnableAprilFools && aprilFoolsRand < 5)
         {
-            case 0:
-                aprilFoolsTrack = (await node.Rest.GetTracksAsync("W4jg6iWyCHM")).Tracks.First();
-                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
-                requesterName = "Ast Rickley";
-                usedAprilFools.Add(ctx.Member.Id);
-                break;
-            case 1:
-                aprilFoolsTrack = (await node.Rest.GetTracksAsync("rm8073qYY8k")).Tracks.First();
-                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
-                requesterName = "Ast Rickley";
-                usedAprilFools.Add(ctx.Member.Id);
-                break;
-            case 2:
-                aprilFoolsTrack = (await node.Rest.GetTracksAsync("cw8tuNZjIf4")).Tracks.First();
-                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
-                requesterName = "Ast Rickley";
-                usedAprilFools.Add(ctx.Member.Id);
-                break;
-            case 3:
-                aprilFoolsTrack = (await node.Rest.GetTracksAsync("POiIWiIPBVo")).Tracks.First();
-                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
-                requesterName = "Ast Rickley";
-                usedAprilFools.Add(ctx.Member.Id);
-                break;
-            case 4:
-                aprilFoolsTrack = (await node.Rest.GetTracksAsync("lrbOiYrMSPk")).Tracks.First();
-                embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
-                requesterName = "Ast Rickley";
-                usedAprilFools.Add(ctx.Member.Id);
-                break;
-            default:
-                break;
+            switch (aprilFoolsRand)
+            {
+                case 0:
+                    aprilFoolsTrack = (await node.Rest.GetTracksAsync("W4jg6iWyCHM")).Tracks.First();
+                    break;
+                case 1:
+                    aprilFoolsTrack = (await node.Rest.GetTracksAsync("rm8073qYY8k")).Tracks.First();
+                    break;
+                case 2:
+                    aprilFoolsTrack = (await node.Rest.GetTracksAsync("cw8tuNZjIf4")).Tracks.First();
+                    break;
+                case 3:
+                    aprilFoolsTrack = (await node.Rest.GetTracksAsync("POiIWiIPBVo")).Tracks.First();
+                    break;
+                case 4:
+                    aprilFoolsTrack = (await node.Rest.GetTracksAsync("lrbOiYrMSPk")).Tracks.First();
+                    break;
+            }
+            embedBuilder.Title = "♰ⓡⓐɕ𝓀 𝕗𝕆𝐮n∂";
+            requesterName = "Ast Rickley";
         }
 
         if (playNow)
@@ -464,7 +451,7 @@ public class MusicCommands : ApplicationCommandModule
     [UpdateCaches]
     [CustomRequireGuild]
     [SlashCommand("skipto", "Springt zu einer bestimmten Stelle im Video")]
-    public async Task SkipTo(InteractionContext ctx, [Option("minutes", "Zeitpunkt in Minuten vom Start")] [Minimum(0)] long minutes,
+    public async Task SkipTo(InteractionContext ctx, [Option("minutes", "Zeitpunkt in Minuten vom Start")][Minimum(0)] long minutes,
         [Option("seconds", "Zeitpunkt in Sekunden vom Start")] [Minimum(0)]
         long seconds)
     {

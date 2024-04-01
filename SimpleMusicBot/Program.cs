@@ -10,6 +10,8 @@ public class Program
 {
     public static DiscordClient Client { get; private set; }
 
+    public static bool EnableAprilFools {get; private set; }
+
     public static async Task Main()
     {
         var token = Environment.GetEnvironmentVariable("MUSIC_BOT_TOKEN") ??
@@ -18,6 +20,7 @@ public class Program
                                throw new InvalidOperationException("Environment variable \"LAVALINK_PASSWORD\" not found");
         var lavalinkHostname = Environment.GetEnvironmentVariable("LAVALINK_HOSTNAME") ?? "127.0.0.1";
         var lavalinkPort = Environment.GetEnvironmentVariable("LAVALINK_PORT") ?? "2333";
+        EnableAprilFools = bool.Parse(Environment.GetEnvironmentVariable("APFIL_FOOLS") ?? "false");
 
         Client = new DiscordClient(new DiscordConfiguration
         {
